@@ -1,16 +1,17 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("simplerscore")]
+[assembly: AssemblyTitle("SimplerScore")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Symbio")]
-[assembly: AssemblyProduct("simplerscore")]
-[assembly: AssemblyCopyright("Copyright © Symbio 2016")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("SimplerScore")]
+[assembly: AssemblyCopyright("Copyright © Petri Niiranen 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,6 +32,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyInformationalVersion("SimplerScore 0.1 alpha")]
