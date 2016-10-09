@@ -7,6 +7,15 @@
 
     internal static class ProgramExtensions
     {
+        public static bool IsHelp (this string[] args)
+        {
+            var isHelp = args
+                .Any(a => a.StartsWith("--help", StringComparison.InvariantCultureIgnoreCase)
+                          || a.StartsWith("-?", StringComparison.InvariantCultureIgnoreCase));
+
+            return isHelp;
+        }
+
         public static string BaseUrl (this string[] args)
         {
             var baseUrl = args
@@ -35,6 +44,13 @@
 
         private static void Main (string[] args)
         {
+            if (args.IsHelp())
+            {
+                ShowStartupOptions();
+                WaitForUserInteractionForExit();
+                return;
+            }
+
             // command line overrides everything
             // then app settings
             // finally default
@@ -46,9 +62,27 @@
 
             using (WebApp.Start<Startup>(baseUrl))
             {
-                Console.WriteLine("Press enter to exit");
-                Console.ReadLine();
+                WaitForUserInteractionForExit();
             }
+        }
+
+        private static void ShowStartupOptions ()
+        {
+            var message = new[]
+            {
+                @"Options are: ",
+                @"-------------------+-------------------",
+                @"--help |-?          Show this help",
+                @"--url=<startup url> Service address"
+            };
+
+            Console.Write(message.Aggregate("", (seed, next) => seed + Environment.NewLine + next));
+        }
+
+        private static void WaitForUserInteractionForExit ()
+        {
+            Console.WriteLine("Press enter to exit");
+            Console.ReadLine();
         }
     }
 }
