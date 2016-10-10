@@ -12,6 +12,7 @@
     using System;
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
+    using Microsoft.Practices.Unity.Configuration;
 
     public class Startup
     {
@@ -67,6 +68,7 @@
             config.Services.Replace(typeof(IExceptionHandler), new PassthroughExceptionHandler());
 
             var container = new UnityContainer();
+            container.LoadConfiguration();
             config.DependencyResolver = new UnityResolver(container);
 
             app.UseWebApi(config);

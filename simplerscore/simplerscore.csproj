@@ -119,6 +119,17 @@
     <Compile Include="Authorization\ApplicationOAuthServerProvider.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="CustomDirectRouteProvider.cs" />
+    <Compile Include="DataAccess\AbstractDataProvider.cs" />
+    <Compile Include="DataAccess\LiteContext.cs" />
+    <Compile Include="DataAccess\MeetDataProvider.cs" />
+    <Compile Include="DataObjects\Event.cs" />
+    <Compile Include="DataObjects\Exercise.cs" />
+    <Compile Include="DataObjects\Judge.cs" />
+    <Compile Include="DataObjects\Athlete.cs" />
+    <Compile Include="DataObjects\JudgePanel.cs" />
+    <Compile Include="DataObjects\Meet.cs" />
+    <Compile Include="DataObjects\Person.cs" />
+    <Compile Include="DataObjects\SchedulingBehavior.cs" />
     <Compile Include="ExceptionHandlers\PassthroughExceptionHandler .cs" />
     <Compile Include="Extensions\MiddlewareExtensions.cs" />
     <Compile Include="LocalAssembliesResolver.cs" />
@@ -126,6 +137,7 @@
     <Compile Include="Middleware\ConnectionFilterMiddleware.cs" />
     <Compile Include="Middleware\ErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\LoggingMiddleware.cs" />
+    <Compile Include="Models\MeetModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnityResolver.cs" />
@@ -139,6 +151,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="unity.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
