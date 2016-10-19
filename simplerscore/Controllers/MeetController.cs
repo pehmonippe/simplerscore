@@ -29,7 +29,7 @@
         [Route("")]
         public async Task<int> AddMeet ([FromBody] Meet meet)
         {
-            return await Add(meet));
+            return await Add(meet);
         }
 
         [HttpPost]
