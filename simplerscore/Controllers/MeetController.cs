@@ -22,32 +22,23 @@
         [Route("")]
         public async Task<IEnumerable<Meet>> Get ()
         {
-            var all = Provider.FindAll<Meet>();
-            return await Task.FromResult(all);
+            return await GetAll<Meet>();
         }
 
         [HttpPost]
         [Route("")]
         public async Task<int> AddMeet ([FromBody] Meet meet)
         {
-            if (null == meet)
-                throw new NullArgumentException(nameof(meet));
-
-            var id = Provider.Add(meet);
-            return await Task.FromResult(id);
+            return await Add(meet));
         }
 
         [HttpPost]
         [Route("{id:int}")]
         public async Task<int> UpdateMeet ([FromUri] int id, [FromBody] Meet meet)
         {
-            if (null == meet)
-                throw new NullArgumentException(nameof(meet));
-
             meet.Id = id;
-            Provider.Update(meet);
 
-            return await Task.FromResult(meet.Id);
+            return await Update(id, meet);
         }
 
         //[Authorize(Roles="admin")]
