@@ -1,56 +1,73 @@
 ﻿namespace SimplerScore.Models
 {
-    using System.Collections.Generic;
-    using DataAccess;
     using DataObjects;
+    using JetBrains.Annotations;
+    using System.Collections.Generic;
 
     public class MeetModel : Meet
     {
-        private readonly IDataProvider<Meet> provider;
-
         public IEnumerable<EventModel> Events
         {
             get;
             set;
         } = new List<EventModel>();
 
-        public MeetModel (IDataProvider<Meet> provider)
+        public MeetModel ()
         {
-            this.provider = provider;
         }
 
-        public void LoadModel ()
+        public MeetModel ([NotNull] Meet meet)
         {
-            if (0 == Id)
-                return;
-
-            var me = provider.Find(Id);
+            DateOfEvent = meet.DateOfEvent;
+            Id = meet.Id;
+            Location = meet.Location;
+            Name = meet.Name;
+            Sponsor = meet.Sponsor;
         }
     }
 
     public class EventModel : Event
     {
-        private readonly IDataProvider<Event> provider;
-
         public IEnumerable<AthleteModel> Athletes
         {
             get;
             set;
         } = new List<AthleteModel>();
 
-        public EventModel (IDataProvider<Event> provider)
+        public EventModel ()
         {
-            this.provider = provider;
+        }
+
+        public EventModel ([NotNull] Event evnt)
+        {
+            Group = evnt.Group;
+            Id = evnt.Id;
+            MeetId = evnt.MeetId;
+            Name = evnt.Name;
+            Order = evnt.Order;
+            Panel = evnt.Panel;
+            ScheduleBehavior = evnt.ScheduleBehavior;
+            ScheduledTime = evnt.ScheduledTime;
+            Sponsor = evnt.Sponsor;
         }
     }
 
     public class AthleteModel : Athlete
     {
-        private readonly IDataProvider<Athlete> provider;
-
-        public AthleteModel (IDataProvider<Athlete> provider)
+        public AthleteModel ()
         {
-            this.provider = provider;
+        }
+
+        public AthleteModel ([NotNull] Athlete athelete)
+        {
+            EventId = athelete.EventId;
+            Excercises = athelete.Excercises;
+            FirstName = athelete.FirstName;
+            Id = athelete.Id;
+            LastName = athelete.LastName;
+            RunningOrder = athelete.RunningOrder;
+            Team = athelete.Team;
+            Total = athelete.Total;
         }
     }
 }

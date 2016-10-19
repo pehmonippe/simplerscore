@@ -118,10 +118,14 @@
     <Compile Include="Attributes\HttpStatusAttribute.cs" />
     <Compile Include="Authorization\ApplicationOAuthServerProvider.cs" />
     <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\MeetController.cs" />
     <Compile Include="CustomDirectRouteProvider.cs" />
-    <Compile Include="DataAccess\AbstractDataProvider.cs" />
+    <Compile Include="DataAccess\DataProvider.cs" />
+    <Compile Include="DataAccess\DataProviderExtensions.cs" />
+    <Compile Include="DataAccess\IDataProvider.cs" />
     <Compile Include="DataAccess\LiteContext.cs" />
-    <Compile Include="DataAccess\MeetDataProvider.cs" />
     <Compile Include="DataObjects\Event.cs" />
     <Compile Include="DataObjects\Exercise.cs" />
     <Compile Include="DataObjects\Judge.cs" />
@@ -131,6 +135,7 @@
     <Compile Include="DataObjects\Person.cs" />
     <Compile Include="DataObjects\SchedulingBehavior.cs" />
     <Compile Include="ExceptionHandlers\PassthroughExceptionHandler .cs" />
+    <Compile Include="Exceptions\ConfigurationMissingException.cs" />
     <Compile Include="Extensions\MiddlewareExtensions.cs" />
     <Compile Include="LocalAssembliesResolver.cs" />
     <Compile Include="Middleware\AuthorizationMiddleware.cs" />
