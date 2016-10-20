@@ -5,7 +5,6 @@ namespace SimplerScore.Controllers
     using DataAccess;
     using Exceptions;
     using System.Web.Http;
-    using DataObjects;
     using JetBrains.Annotations;
 
     public abstract class BaseController : ApiController
@@ -15,7 +14,7 @@ namespace SimplerScore.Controllers
             get;
         }
 
-        protected BaseController (IDataProvider provider)
+        protected BaseController ([NotNull] IDataProvider provider)
         {
             Provider = provider;
         }

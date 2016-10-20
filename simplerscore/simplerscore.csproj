@@ -118,8 +118,10 @@
     <Compile Include="Attributes\HttpStatusAttribute.cs" />
     <Compile Include="Authorization\ApplicationOAuthServerProvider.cs" />
     <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\AthleteController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\JudgePanelController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
     <Compile Include="CustomDirectRouteProvider.cs" />
     <Compile Include="DataAccess\DataProvider.cs" />

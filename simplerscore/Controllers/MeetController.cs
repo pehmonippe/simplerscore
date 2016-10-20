@@ -2,7 +2,6 @@
 {
     using DataAccess;
     using DataObjects;
-    using Exceptions;
     using Models;
     using System;
     using System.Collections.Generic;
