@@ -64,12 +64,10 @@
         {
             var meet = Provider.Find<Meet>(id);
 
-            Expression<Func<Event, bool>> eventCriteria = e => e.MeetId == id;
+            if (null == meet)
+                return null;
 
-            var model = new MeetModel(meet)
-            {
-                Events = Provider.Find(eventCriteria).ConvertAll(e => new EventModel(e))
-            };
+            var model = new MeetModel(meet, Provider);
 
             return await Task.FromResult(model);
         }
