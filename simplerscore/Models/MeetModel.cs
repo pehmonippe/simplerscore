@@ -64,6 +64,7 @@
         private readonly IDataProvider provider;
 
         private Lazy<IEnumerable<AthleteModel>> athletes;
+        private Lazy<JudgePanelModel> judgePanel;
 
         public IEnumerable<AthleteModel> Athletes
         {
@@ -73,6 +74,18 @@
                     .Value;
 
                 return a;
+            }
+        }
+
+
+        public JudgePanelModel JudgePanel
+        {
+            get
+            {
+                var j = (judgePanel ?? (JudgePanel = new Lazy<JudgePanelModel>(InitJudgePanel)))
+                    .Value;
+
+                return j;
             }
         }
 
@@ -127,6 +140,40 @@
             RunningOrder = athelete.RunningOrder;
             Team = athelete.Team;
             Total = athelete.Total;
+        }
+    }
+
+    public class JudgePanelModel : JudgePanel
+    {
+        private readonly IDataProvider provider;
+
+        public JudgePanelModel ()
+        {
+        }
+
+        public JudgePanelModel ([NotNull] JudgePanel judgePanel, IDataProvider provider)
+        {
+            ChiefJudge = judgePanel.ChiefJudge;
+            DifficultyJudge = judgePanel.DifficultyJudge;
+            FlightTimeJudge = judgePanel.FlightTimeJudge;
+            Id = judgePanel.Id;
+            Judge1 = judgePanel.Judge1;
+            Judge2 = judgePanel.Judge2;
+            Judge3 = judgePanel.Judge3;
+            Judge4 = judgePanel.Judge4;
+            Judge5 = judgePanel.Judge5;
+
+            this.provider = provider;
+        }
+
+        private JudgePanel InitJudgePanel ()
+        {
+            if (null == provider)
+                return new JudgePanel();
+
+            //TODO:...
+            var panel = provider.Collection<JudgePanel>();
+            return panel;
         }
     }
 }
