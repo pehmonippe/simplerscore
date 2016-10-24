@@ -11,6 +11,12 @@
             set;
         }
 
+        public int EventId
+        {
+            get;
+            set;
+        }
+
         public Judge ChiefJudge
         {
             get;
