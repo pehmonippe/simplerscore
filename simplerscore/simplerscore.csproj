@@ -123,6 +123,7 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\JudgePanelController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
+    <Compile Include="Controllers\ScoringController.cs" />
     <Compile Include="CustomDirectRouteProvider.cs" />
     <Compile Include="DataAccess\DataProvider.cs" />
     <Compile Include="DataAccess\DataProviderExtensions.cs" />
@@ -144,6 +145,9 @@
     <Compile Include="Middleware\ConnectionFilterMiddleware.cs" />
     <Compile Include="Middleware\ErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\LoggingMiddleware.cs" />
+    <Compile Include="Models\AthleteModel.cs" />
+    <Compile Include="Models\EventModel.cs" />
+    <Compile Include="Models\JudgePanelModel.cs" />
     <Compile Include="Models\MeetModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
