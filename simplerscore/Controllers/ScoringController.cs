@@ -9,6 +9,9 @@
 
     internal static class ScoreExtensions
     {
+        private const int JudgeDimension = 0;
+        private const int ExerciseDimension = 1;
+
         public static int Median (this IEnumerable<int> array)
         {
             var list = array
@@ -37,26 +40,55 @@
 
         public static int[] Median (this int[,] array)
         {
-            const int exerciseDimension = 1;
-
-            var exercises = array.GetUpperBound(exerciseDimension);
-
+            var exercises = array.GetUpperBound(ExerciseDimension);
             var medians = new int[exercises + 1];
 
             // compute median of each exercise 
             for (var i = 0; i <= exercises; i++)
             {
-                var exerciseScores = CollectScoresForExercise(array, i);
-                medians[i] = exerciseScores.Median();
+                medians[i] = CollectScoresForExercises(array, i).Median();
             }
 
             return medians;
         }
 
-        private static IEnumerable<int> CollectScoresForExercise (int[,] array, int i)
+        public static decimal Result (this IEnumerable<int> deductions)
         {
-            const int judgeDimension = 0;
-            var judges = array.GetUpperBound(judgeDimension);
+            var sum = deductions.Sum(d => d);
+            var result = 10.0 - (sum / 10.0);
+
+            return (decimal) result;
+        }
+
+        public static decimal[] Results (this int[,] array)
+        {
+            var judges = array.GetUpperBound(JudgeDimension);
+            var results = new decimal[judges + 1];
+
+            for (var j = 0; j <= judges; j++)
+            {
+                results[j] = CollectScoresForJudges(array, j).Result();                
+            }
+
+            return results;
+        }
+
+        private static IEnumerable<int> CollectScoresForJudges (int[,] array, int j)
+        {
+            var exercises = array.GetUpperBound(ExerciseDimension);
+            var resultList = new List<int>();
+
+            for (var e = 0; e <= exercises; e++)
+            {
+                resultList.Add(array[j, e]);
+            }
+
+            return resultList;
+        }
+
+        private static IEnumerable<int> CollectScoresForExercises (int[,] array, int i)
+        {
+            var judges = array.GetUpperBound(JudgeDimension);
 
             var exerciseScores = new List<int>();
 
@@ -71,13 +103,31 @@
 
     public class ProposedScoring
     {
-        public int[,] GivenScores
+        public int[,] Deductions
         {
             get;
             set;
         }
 
         public int[] Medians
+        {
+            get;
+            set;
+        }
+
+        public decimal[] Results
+        {
+            get;
+            set;
+        }
+
+        public decimal Time
+        {
+            get;
+            set;
+        }
+
+        public decimal Penalty
         {
             get;
             set;
@@ -92,20 +142,20 @@
         {
         }
 
-        [Authorize(Roles = "ChiefJudge")]
+        //[Authorize(Roles = "ChiefJudge")]
         [HttpGet]
         [Route("")]
         public Task<ProposedScoring> GetScores ()
         {
             var proposed = new ProposedScoring
             {
-                GivenScores = new int[6, 10]
+                Deductions = new int[6, 10]
             };
 
-            proposed.Medians = proposed.GivenScores.Median();
+            proposed.Medians = proposed.Deductions.Median();
+            proposed.Results = proposed.Deductions.Results();
             return Task.FromResult(proposed);
         }
-
 
         [Authorize(Roles ="Judge")]
         [HttpGet]
@@ -125,7 +175,7 @@
 
         [Authorize(Roles = "ChiefJudge")]
         [HttpGet]
-        [Route("exercises/{exercises:int:range(0,10)}")]
+        [Route("exercises={exercises:int:range(0,10)}")]
         public IHttpActionResult SetNumberOfExercises ([FromUri] int exercises = 10)
         {
             return Ok();
@@ -133,7 +183,7 @@
 
         [Authorize(Roles = "FlightTimeJudge")]
         [HttpGet]
-        [Route("time/{time:int:range(0,30000)}")]
+        [Route("time={time:int:range(0,30000)}")]
         public IHttpActionResult SetFlightTime ([FromUri] int time)
         {
             // flight time should be converted to decimal
@@ -145,13 +195,25 @@
 
         [Authorize(Roles = "ChiefJudge")]
         [HttpGet]
-        [Route("penalty/{penalty:int:range(0,100)}")]
+        [Route("penalty={penalty:int:range(0,100)}")]
         public IHttpActionResult SetPenalty ([FromUri] int penalty)
         {
             // penalty should be converted to decimal
             // 1 --> 0.1
             var value = penalty / (decimal) 10.0;
 
+            return Ok();
+        }
+
+        /// <summary>
+        /// Release results for publishing (for scoreboard).
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "ChiefJudge")]
+        [HttpGet]
+        [Route("signoff")]
+        public IHttpActionResult SignOff ()
+        {
             return Ok();
         }
     }
