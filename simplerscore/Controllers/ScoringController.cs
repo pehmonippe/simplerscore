@@ -128,6 +128,29 @@
         [Route("exercises/{exercises:int:range(0,10)}")]
         public IHttpActionResult SetNumberOfExercises ([FromUri] int exercises = 10)
         {
+            return Ok();
+        }
+
+        [Authorize(Roles = "FlightTimeJudge")]
+        [HttpGet]
+        [Route("time/{time:int:range(0,30000)}")]
+        public IHttpActionResult SetFlightTime ([FromUri] int time)
+        {
+            // flight time should be converted to decimal
+            // 1000 --> 1.0;
+            var value = time / (decimal) 1000.0;
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "ChiefJudge")]
+        [HttpGet]
+        [Route("penalty/{penalty:int:range(0,100)}")]
+        public IHttpActionResult SetPenalty ([FromUri] int penalty)
+        {
+            // penalty should be converted to decimal
+            // 1 --> 0.1
+            var value = penalty / (decimal) 10.0;
 
             return Ok();
         }
