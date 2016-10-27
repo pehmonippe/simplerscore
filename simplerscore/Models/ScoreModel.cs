@@ -2,23 +2,10 @@ namespace SimplerScore.Models
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using Computation;
     using DataObjects;
     using JetBrains.Annotations;
-
-    internal static class ScoreModelExtensions
-    {
-        public static ReadOnlyDictionary<int, ReadOnlyCollection<int>> AsReadOnly ([NotNull][ItemNotNull] this ConcurrentDictionary<int, List<int>> deductions)
-        {
-            var source = deductions
-                            .ToDictionary(row => row.Key, row => row.Value.AsReadOnly());
-
-            var readOnlyDictionary = new ReadOnlyDictionary<int, ReadOnlyCollection<int>>(source);
-            return readOnlyDictionary;
-        }
-    }
 
     public class ScoreModel
     {
