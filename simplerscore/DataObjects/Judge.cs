@@ -10,5 +10,10 @@
             get;
             set;
         }
+
+        public Judge Clone ()
+        {
+            return (Judge) MemberwiseClone();
+        }
     }
 }

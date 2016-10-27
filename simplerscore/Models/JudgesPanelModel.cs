@@ -1,5 +1,6 @@
 namespace SimplerScore.Models
 {
+    using System.Linq;
     using DataObjects;
     using JetBrains.Annotations;
 
@@ -11,15 +12,12 @@ namespace SimplerScore.Models
 
         public JudgesPanelModel ([NotNull] JudgesPanel judgesPanel)
         {
-            ChairOfJudgesPanel = judgesPanel.ChairOfJudgesPanel;
-            DifficultyJudge = judgesPanel.DifficultyJudge;
-            TimeJudge = judgesPanel.TimeJudge;
             Id = judgesPanel.Id;
-            Judge1 = judgesPanel.Judge1;
-            Judge2 = judgesPanel.Judge2;
-            Judge3 = judgesPanel.Judge3;
-            Judge4 = judgesPanel.Judge4;
-            Judge5 = judgesPanel.Judge5;
+
+            ChairOfJudgesPanel = judgesPanel.ChairOfJudgesPanel.Clone();
+            ExecutionJudges = judgesPanel.ExecutionJudges.ToList();
+            DifficultyJudge = judgesPanel.DifficultyJudge.Clone();
+            TimeJudge = judgesPanel.TimeJudge.Clone();
         }
     }
 }
