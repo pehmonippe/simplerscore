@@ -2,6 +2,7 @@
 {
     using LiteDB;
     using System;
+    using Models.Computation;
 
     public class Event
     {
@@ -49,6 +50,12 @@
         }
 
         public JudgePanel Panel
+        {
+            get;
+            set;
+        }
+
+        public ComputationStrategy ScoringStrategy
         {
             get;
             set;

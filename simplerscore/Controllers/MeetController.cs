@@ -8,11 +8,12 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using JetBrains.Annotations;
 
     [RoutePrefix("meet")]
     public class MeetController : BaseController
     {
-        public MeetController (IDataProvider provider)
+        public MeetController ([NotNull] IServiceProvider provider)
             : base(provider)
         {
         }
@@ -67,7 +68,7 @@
             if (null == meet)
                 return null;
 
-            var model = new MeetModel(meet, Provider);
+            var model = new MeetModel(meet, ServiceProvider);
 
             return await Task.FromResult(model);
         }

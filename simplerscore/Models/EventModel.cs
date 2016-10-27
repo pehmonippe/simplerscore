@@ -4,12 +4,15 @@ namespace SimplerScore.Models
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using Computation;
+    using Extensions;
     using DataAccess;
     using DataObjects;
     using JetBrains.Annotations;
 
     public class EventModel : Event
     {
+        private readonly IServiceProvider serviceProvider;
         private readonly IDataProvider provider;
 
         private Lazy<IEnumerable<AthleteModel>> athletes;
@@ -33,11 +36,13 @@ namespace SimplerScore.Models
             }
         }
 
-        public EventModel ()
+        public EventModel ([NotNull] IServiceProvider serviceProvider)
         {
+            this.serviceProvider = serviceProvider;
         }
 
-        public EventModel ([NotNull] Event evnt, [CanBeNull] IDataProvider provider)
+        public EventModel ([NotNull] IServiceProvider serviceProvider, [NotNull] Event evnt)
+            : this(serviceProvider)
         {
             Group = evnt.Group;
             Id = evnt.Id;
@@ -45,11 +50,26 @@ namespace SimplerScore.Models
             Name = evnt.Name;
             Order = evnt.Order;
             Panel = evnt.Panel;
+            ScoringStrategy = evnt.ScoringStrategy;
             ScheduleBehavior = evnt.ScheduleBehavior;
             ScheduledTime = evnt.ScheduledTime;
             Sponsor = evnt.Sponsor;
 
-            this.provider = provider;
+            provider = serviceProvider.GetService<IDataProvider>();
+        }
+
+        public IComputationStrategy GetComputationStrategy ()
+        {
+            var factory = serviceProvider.GetService<IComputationStrategyFactory>();
+            var strategy = factory?.Create(ScoringStrategy);
+
+            return strategy;
+        }
+
+        public int GetJudgeCount ()
+        {
+            //TODO: Get actual number from judgepanel....
+            return 5;
         }
 
         private List<AthleteModel> InitModelCollection ()

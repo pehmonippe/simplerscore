@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;JETBRAINS_ANNOTATIONS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -34,10 +34,6 @@
   <ItemGroup>
     <Reference Include="IPAddressRange, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IPAddressRange.1.6.1.0\lib\net40\IPAddressRange.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=10.1.5.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.1.5\lib\net\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LiteDB, Version=2.0.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
@@ -115,12 +111,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\Annotations.cs" />
+    <Compile Include="Attributes\AuthorizeActionAttribute.cs" />
+    <Compile Include="Attributes\AuthorizedAction.cs" />
     <Compile Include="Attributes\HttpStatusAttribute.cs" />
     <Compile Include="Authorization\ApplicationOAuthServerProvider.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AthleteController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CurrentController.cs" />
+    <Compile Include="DataObjects\ProposedScoring.cs" />
+    <Compile Include="DataObjects\Skill.cs" />
+    <Compile Include="DataObjects\Execution.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Models\CurrentProvider.cs" />
+    <Compile Include="Validators\CurrentProviderWithoutScoringModelValidatorBuilder.cs" />
+    <Compile Include="Validators\CurrentProviderWithCurrentEventValidatorBuilder.cs" />
+    <Compile Include="Validators\CurrentProviderWithCurrentMeetValidatorBuilder.cs" />
+    <Compile Include="Validators\IValidatorBuilder.cs" />
+    <Compile Include="Validators\CurrentProviderValidator.cs" />
     <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Validators\IValidatorChain.cs" />
     <Compile Include="Controllers\JudgePanelController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
     <Compile Include="Controllers\ScoringController.cs" />
@@ -130,7 +141,7 @@
     <Compile Include="DataAccess\IDataProvider.cs" />
     <Compile Include="DataAccess\LiteContext.cs" />
     <Compile Include="DataObjects\Event.cs" />
-    <Compile Include="DataObjects\Exercise.cs" />
+    <Compile Include="DataObjects\Routine.cs" />
     <Compile Include="DataObjects\Judge.cs" />
     <Compile Include="DataObjects\Athlete.cs" />
     <Compile Include="DataObjects\JudgePanel.cs" />
@@ -139,16 +150,27 @@
     <Compile Include="DataObjects\SchedulingBehavior.cs" />
     <Compile Include="ExceptionHandlers\PassthroughExceptionHandler .cs" />
     <Compile Include="Exceptions\ConfigurationMissingException.cs" />
+    <Compile Include="Exceptions\NoActiveEventException.cs" />
+    <Compile Include="Exceptions\ScoringModelAlreadyExistsException.cs" />
     <Compile Include="Extensions\MiddlewareExtensions.cs" />
+    <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="LocalAssembliesResolver.cs" />
     <Compile Include="Middleware\AuthorizationMiddleware.cs" />
     <Compile Include="Middleware\ConnectionFilterMiddleware.cs" />
     <Compile Include="Middleware\ErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\LoggingMiddleware.cs" />
+    <Compile Include="Models\Computation\AbstractComputationStrategy.cs" />
     <Compile Include="Models\AthleteModel.cs" />
+    <Compile Include="Models\Computation\ComputationStrategyFactory.cs" />
+    <Compile Include="Models\Computation\ComputationStrategy.cs" />
+    <Compile Include="Models\CurrentModel.cs" />
     <Compile Include="Models\EventModel.cs" />
+    <Compile Include="Models\Computation\IComputationStrategy.cs" />
+    <Compile Include="Models\ICurrentProvider.cs" />
     <Compile Include="Models\JudgePanelModel.cs" />
+    <Compile Include="Models\Computation\MedianDeductionComputationStrategy.cs" />
     <Compile Include="Models\MeetModel.cs" />
+    <Compile Include="Models\Computation\TotalDeductionComputationStrategy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnityResolver.cs" />
@@ -164,6 +186,7 @@
     <None Include="packages.config" />
     <None Include="unity.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

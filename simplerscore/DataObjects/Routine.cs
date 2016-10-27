@@ -1,36 +1,34 @@
 ﻿namespace SimplerScore.DataObjects
 {
     using System.Collections.Generic;
-    using LiteDB;
 
-    public class Athlete : Person
+    public class Routine
     {
-        [BsonId(true)]
-        public int Id
+        public List<Execution> Execution
         {
             get;
             set;
         }
 
-        public int EventId
+        public int Difficulty
         {
             get;
             set;
         }
 
-        public int RunningOrder
+        public int FlightTime
         {
             get;
             set;
         }
 
-        public List<Routine> Routines
+        public decimal Score
         {
             get;
             set;
-        } = new List<Routine>();
+        }
 
-        public decimal Total
+        public string Video
         {
             get;
             set;

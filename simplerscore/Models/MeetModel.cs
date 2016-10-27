@@ -1,16 +1,17 @@
 ﻿namespace SimplerScore.Models
 {
-    using System;
+    using DataAccess;
     using DataObjects;
+    using Extensions;
     using JetBrains.Annotations;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using DataAccess;
 
     public class MeetModel : Meet
     {
-        private readonly IDataProvider provider;
+        private readonly IServiceProvider serviceProvider;
 
         private Lazy<IEnumerable<EventModel>> events;
 
@@ -23,16 +24,7 @@
             }
         }
 
-        public MeetModel ()
-        {
-        }
-
-        public MeetModel ([NotNull] Meet meet)
-            : this(meet, null)
-        {
-        }
-
-        public MeetModel ([NotNull] Meet meet, [CanBeNull] IDataProvider provider)
+        public MeetModel ([NotNull] Meet meet, [NotNull] IServiceProvider serviceProvider)
         {
             DateOfEvent = meet.DateOfEvent;
             Id = meet.Id;
@@ -40,11 +32,13 @@
             Name = meet.Name;
             Sponsor = meet.Sponsor;
 
-            this.provider = provider;
+            this.serviceProvider = serviceProvider;
         }
 
         private List<EventModel> InitModelCollection ()
         {
+            var provider = serviceProvider.GetService<IDataProvider>();
+
             if (null == provider)
                 return new List<EventModel>();
 
@@ -53,7 +47,7 @@
             var collection = provider.Collection<Event>()
                 .Find(eventCriteria)
                 .ToList()
-                .ConvertAll(e => new EventModel(e, provider));
+                .ConvertAll(e => new EventModel(serviceProvider, e));
 
             return collection;
         }

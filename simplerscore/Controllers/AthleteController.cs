@@ -1,14 +1,15 @@
 ﻿namespace SimplerScore.Controllers
 {
+    using DataObjects;
+    using JetBrains.Annotations;
+    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using DataAccess;
-    using DataObjects;
 
     [RoutePrefix("athlete")]
     public class AthleteController : BaseController
     {
-        public AthleteController (IDataProvider provider) 
+        public AthleteController ([NotNull] IServiceProvider provider) 
             : base(provider)
         {
         }
