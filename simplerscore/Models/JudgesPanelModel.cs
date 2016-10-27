@@ -13,7 +13,7 @@ namespace SimplerScore.Models
         {
             ChairOfJudgesPanel = judgesPanel.ChairOfJudgesPanel;
             DifficultyJudge = judgesPanel.DifficultyJudge;
-            FlightTimeJudge = judgesPanel.FlightTimeJudge;
+            TimeJudge = judgesPanel.TimeJudge;
             Id = judgesPanel.Id;
             Judge1 = judgesPanel.Judge1;
             Judge2 = judgesPanel.Judge2;

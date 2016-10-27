@@ -1,5 +1,6 @@
 ﻿namespace SimplerScore.DataObjects
 {
+    using System.Collections.Generic;
     using LiteDB;
 
     public class JudgesPanel
@@ -23,31 +24,7 @@
             set;
         }
 
-        public Judge Judge1
-        {
-            get;
-            set;
-        }
-
-        public Judge Judge2
-        {
-            get;
-            set;
-        }
-
-        public Judge Judge3
-        {
-            get;
-            set;
-        }
-
-        public Judge Judge4
-        {
-            get;
-            set;
-        }
-
-        public Judge Judge5
+        public List<Judge> ExecutionJudges
         {
             get;
             set;
@@ -59,7 +36,7 @@
             set;
         }
 
-        public Judge FlightTimeJudge
+        public Judge TimeJudge
         {
             get;
             set;

@@ -1,12 +1,12 @@
-﻿namespace SimplerScore.Models
+namespace SimplerScore.Models
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using JetBrains.Annotations;
     using Computation;
     using DataObjects;
+    using JetBrains.Annotations;
 
     internal static class ScoreModelExtensions
     {
