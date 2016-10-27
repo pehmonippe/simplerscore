@@ -16,12 +16,14 @@
         }
         public override void OnAuthorization (HttpActionContext actionContext)
         {
-            base.OnAuthorization(actionContext);
+            return;
+            //base.OnAuthorization(actionContext);
         }
 
-        public override Task OnAuthorizationAsync (HttpActionContext actionContext, CancellationToken cancellationToken)
+        public override async Task OnAuthorizationAsync (HttpActionContext actionContext, CancellationToken cancellationToken)
         {
-            return base.OnAuthorizationAsync(actionContext, cancellationToken);
+            await Task.Yield();
+            //return base.OnAuthorizationAsync(actionContext, cancellationToken);
         }
     }
 }

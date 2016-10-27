@@ -125,6 +125,13 @@
     <Compile Include="DataObjects\Execution.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Models\CurrentProvider.cs" />
+    <Compile Include="Models\Factories\AthleteModelFactory.cs" />
+    <Compile Include="Models\Factories\EventModelFactory.cs" />
+    <Compile Include="Models\Factories\IModelFactory.cs" />
+    <Compile Include="Models\Factories\IModelFactoryContainer.cs" />
+    <Compile Include="Models\Factories\JudgesPanelModelFactory.cs" />
+    <Compile Include="Models\Factories\MeetModelFactory.cs" />
+    <Compile Include="Models\Factories\ModelFactoryContainer.cs" />
     <Compile Include="Validators\CurrentProviderWithoutScoringModelValidatorBuilder.cs" />
     <Compile Include="Validators\CurrentProviderWithCurrentEventValidatorBuilder.cs" />
     <Compile Include="Validators\CurrentProviderWithCurrentMeetValidatorBuilder.cs" />
@@ -167,7 +174,7 @@
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\Computation\IComputationStrategy.cs" />
     <Compile Include="Models\ICurrentProvider.cs" />
-    <Compile Include="Models\JudgePanelModel.cs" />
+    <Compile Include="Models\JudgesPanelModel.cs" />
     <Compile Include="Models\Computation\MedianDeductionComputationStrategy.cs" />
     <Compile Include="Models\MeetModel.cs" />
     <Compile Include="Models\Computation\TotalDeductionComputationStrategy.cs" />

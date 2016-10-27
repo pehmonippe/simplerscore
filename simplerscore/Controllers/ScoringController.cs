@@ -1,15 +1,14 @@
 ﻿namespace SimplerScore.Controllers
 {
     using Attributes;
-    using Extensions;
+    using DataAccess;
+    using DataObjects;
     using JetBrains.Annotations;
     using Models;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using DataObjects;
     using Validators;
 
     internal static class ScoreExtensions
@@ -110,12 +109,12 @@
     public class ScoringController : BaseController
     {
         [NotNull]
-        private readonly ICurrentProvider current;
+        private readonly ICurrentProvider currentProvider;
 
-        public ScoringController ([NotNull] IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public ScoringController ([NotNull] ICurrentProvider currentProvider, [NotNull] IDataProvider current)
+            : base(current)
         {
-            current = ServiceProvider.GetService<ICurrentProvider>();
+            this.currentProvider = currentProvider;
         }
 
         [AuthorizeAction(Action = AuthorizedAction.Scoring.Preview)]
@@ -123,7 +122,7 @@
         [Route("details")]
         public Task<ProposedScoring> GetScoreDetails ()
         {
-            var model = current.CurrentScore;
+            var model = currentProvider.CurrentScore;
 
             var proposed = new ProposedScoring
             {
@@ -141,7 +140,7 @@
         [Route("{judge:int:range(1,5)}/{skill:int:range(1,10)}/{deduction:int:range(0,5)}")]
         public IHttpActionResult SetScore ([FromUri] int judge, [FromUri] int skill, [FromUri] int deduction)
         {
-            current.CurrentScore.SetSkillDeduction(judge, skill, deduction);
+            currentProvider.CurrentScore.SetSkillDeduction(judge, skill, deduction);
             return Ok();
         }
 
@@ -150,7 +149,7 @@
         [Route("{judge:int:range(1,5)}/landing={landing:int:range(0,5)}")]
         public IHttpActionResult SetLanding ([FromUri] int judge, [FromUri] int landing)
         {
-            current.CurrentScore.SetLandingDeduction(judge, landing);
+            currentProvider.CurrentScore.SetLandingDeduction(judge, landing);
             return Ok();
         }
 
@@ -159,12 +158,12 @@
         [Route("skills={skills:int:range(0,10)}")]
         public IHttpActionResult SetNumberOfElementsCompleted ([FromUri] int skills = 10)
         {
-            ValidateWith<CurrentProviderWithoutScoringModelValidatorBuilder>(current);
+            ValidateWith<CurrentProviderWithoutScoringModelValidatorBuilder>(currentProvider);
 
-            var strategy = current.CurrentEvent.GetComputationStrategy();
-            var judges = current.CurrentEvent.GetJudgeCount();
+            var strategy = currentProvider.CurrentEvent.GetComputationStrategy();
+            var judges = currentProvider.CurrentEvent.GetJudgeCount();
 
-            current.CurrentScore = new ScoreModel(strategy, judges, skills);
+            currentProvider.CurrentScore = new ScoreModel(strategy, judges, skills);
             return Ok();
         }
 
@@ -182,7 +181,7 @@
 
         [AuthorizeAction(Action = AuthorizedAction.Scoring.Execution)]
         [HttpGet]
-        [Route("penalty/{judge:int:range(0,4)/{penalty:int:range(0,10)}")]
+        [Route("penalty/{judge:int:range(0,4)}/{penalty:int:range(0,10)}")]
         public IHttpActionResult SetAdditionalDeduction ([FromUri] int judge, [FromUri] int penalty)
         {
             // penalty should be converted to decimal
@@ -201,14 +200,14 @@
         [Route("signoff")]
         public IHttpActionResult SignOff ()
         {
-            var routine = current.CurrentScore.ComputeRoutineScore();
-            current.CurrentAthlete.AddRoutine(routine);
+            var routine = currentProvider.CurrentScore.ComputeRoutineScore();
+            currentProvider.CurrentAthlete.AddRoutine(routine);
 
             // persist data
-            Update(current.CurrentAthlete.Id, current.CurrentAthlete).Wait();
+            Update(currentProvider.CurrentAthlete.Id, currentProvider.CurrentAthlete).Wait();
 
             // prepare for next
-            current.CurrentScore = null;
+            currentProvider.CurrentScore = null;
             return Ok();
         }
 

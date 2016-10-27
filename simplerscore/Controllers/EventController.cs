@@ -1,15 +1,14 @@
 ﻿namespace SimplerScore.Controllers
 {
-    using System;
+    using DataAccess;
     using DataObjects;
+    using JetBrains.Annotations;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using JetBrains.Annotations;
 
-    [RoutePrefix("event")]
     public class EventController : BaseController
     {
-        public EventController ([NotNull] IServiceProvider provider)
+        public EventController ([NotNull] IDataProvider provider)
             : base(provider)
         {
         }

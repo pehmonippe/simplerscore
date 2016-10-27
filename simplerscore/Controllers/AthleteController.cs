@@ -2,14 +2,14 @@
 {
     using DataObjects;
     using JetBrains.Annotations;
-    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using DataAccess;
 
     [RoutePrefix("athlete")]
     public class AthleteController : BaseController
     {
-        public AthleteController ([NotNull] IServiceProvider provider) 
+        public AthleteController ([NotNull] IDataProvider provider) 
             : base(provider)
         {
         }

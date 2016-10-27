@@ -72,6 +72,7 @@
             config.DependencyResolver = new UnityResolver(container);
 
             app.UseWebApi(config);
+            //config.EnsureInitialized();
         }
 
         /// <summary>

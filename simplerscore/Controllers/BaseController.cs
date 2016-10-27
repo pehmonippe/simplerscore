@@ -1,23 +1,19 @@
 namespace SimplerScore.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using DataAccess;
     using Exceptions;
-    using System.Web.Http;
-    using Extensions;
     using JetBrains.Annotations;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
 
     public abstract class BaseController : ApiController
     {
-        protected readonly IServiceProvider ServiceProvider;
         protected readonly IDataProvider Provider;
 
-        protected BaseController ([NotNull] IServiceProvider serviceProvider)
+        protected BaseController ([NotNull] IDataProvider provider)
         {
-            ServiceProvider = serviceProvider;
-            Provider = ServiceProvider.GetService<IDataProvider>();
+            Provider = provider;
         }
 
         protected async Task<IEnumerable<T>> GetAll<T> ()

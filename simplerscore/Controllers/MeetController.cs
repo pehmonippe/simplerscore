@@ -9,13 +9,17 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using JetBrains.Annotations;
+    using Models.Factories;
 
     [RoutePrefix("meet")]
     public class MeetController : BaseController
     {
-        public MeetController ([NotNull] IServiceProvider provider)
+        private readonly IModelFactoryContainer modelFactoryContainer;
+
+        public MeetController ([NotNull] IDataProvider provider, [NotNull] IModelFactoryContainer modelFactoryContainer)
             : base(provider)
         {
+            this.modelFactoryContainer = modelFactoryContainer;
         }
 
         [HttpGet]
@@ -68,8 +72,7 @@
             if (null == meet)
                 return null;
 
-            var model = new MeetModel(meet, ServiceProvider);
-
+            var model = (MeetModel) modelFactoryContainer.Create(meet, Provider);
             return await Task.FromResult(model);
         }
     }

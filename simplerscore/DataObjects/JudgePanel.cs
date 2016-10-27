@@ -2,7 +2,7 @@
 {
     using LiteDB;
 
-    public class JudgePanel
+    public class JudgesPanel
     {
         [BsonId(true)]
         public int Id
@@ -17,7 +17,7 @@
             set;
         }
 
-        public Judge ChiefJudge
+        public Judge ChairOfJudgesPanel
         {
             get;
             set;

@@ -5,44 +5,47 @@ namespace SimplerScore.Models
     using System.Linq;
     using System.Linq.Expressions;
     using Computation;
-    using Extensions;
     using DataAccess;
     using DataObjects;
+    using Factories;
     using JetBrains.Annotations;
 
-    public class EventModel : Event
+    public class EventModel : Event, IModel
     {
-        private readonly IServiceProvider serviceProvider;
         private readonly IDataProvider provider;
+        private readonly IComputationStrategyFactory strategyFactory;
+        private readonly IModelFactoryContainer modelFactoryContainer;
 
         private Lazy<IEnumerable<AthleteModel>> athletes;
-        private Lazy<JudgePanelModel> judgePanel;
+        private Lazy<JudgesPanelModel> judgePanel;
 
         public IEnumerable<AthleteModel> Athletes
         {
             get
             {
-                var a = (athletes ?? (athletes = new Lazy<IEnumerable<AthleteModel>>(InitModelCollection)));
+                var a = athletes ?? (athletes = new Lazy<IEnumerable<AthleteModel>>(InitModelCollection));
                 return a.Value;
             }
         }
 
-        public JudgePanelModel JudgePanel
+        public JudgesPanelModel JudgesPanel
         {
             get
             {
-                var j = (judgePanel ?? (judgePanel = new Lazy<JudgePanelModel>(InitJudgePanel)));
+                var j = judgePanel ?? (judgePanel = new Lazy<JudgesPanelModel>(InitJudgePanel));
                 return j.Value;
             }
         }
 
-        public EventModel ([NotNull] IServiceProvider serviceProvider)
+        public EventModel ([NotNull] IDataProvider provider, [NotNull] IComputationStrategyFactory strategyFactory, [NotNull] IModelFactoryContainer modelFactoryContainer)
         {
-            this.serviceProvider = serviceProvider;
+            this.provider = provider;
+            this.strategyFactory = strategyFactory;
+            this.modelFactoryContainer = modelFactoryContainer;
         }
 
-        public EventModel ([NotNull] IServiceProvider serviceProvider, [NotNull] Event evnt)
-            : this(serviceProvider)
+        public EventModel ([NotNull] IDataProvider provider, [NotNull] IComputationStrategyFactory strategyFactory, [NotNull] Event evnt, [NotNull] IModelFactoryContainer modelFactoryContainer)
+            : this(provider, strategyFactory, modelFactoryContainer)
         {
             Group = evnt.Group;
             Id = evnt.Id;
@@ -55,14 +58,12 @@ namespace SimplerScore.Models
             ScheduledTime = evnt.ScheduledTime;
             Sponsor = evnt.Sponsor;
 
-            provider = serviceProvider.GetService<IDataProvider>();
+            this.provider = provider;
         }
 
         public IComputationStrategy GetComputationStrategy ()
         {
-            var factory = serviceProvider.GetService<IComputationStrategyFactory>();
-            var strategy = factory?.Create(ScoringStrategy);
-
+            var strategy = strategyFactory.Create(ScoringStrategy);
             return strategy;
         }
 
@@ -79,27 +80,29 @@ namespace SimplerScore.Models
 
             Expression<Func<Athlete, bool>> athleteCriteria = e => e.EventId == Id;
 
+            var factory = modelFactoryContainer.ModelFactoryOfType<Athlete>();
+
             var collection = provider.Collection<Athlete>()
                 .Find(athleteCriteria)
                 .ToList()
-                .ConvertAll(athlete => new AthleteModel(athlete));
+                .ConvertAll(athlete => (AthleteModel) factory.Create(athlete, provider, modelFactoryContainer));
 
             return collection;
         }
 
-        private JudgePanelModel InitJudgePanel ()
+        private JudgesPanelModel InitJudgePanel ()
         {
             if (null == provider)
-                return new JudgePanelModel();
+                return new JudgesPanelModel();
 
-            Expression<Func<JudgePanel, bool>> judgeCriteria = e => e.EventId == Id;
+            Expression<Func<JudgesPanel, bool>> judgeCriteria = e => e.EventId == Id;
 
-            var panel = provider.Collection<JudgePanel>().FindOne(judgeCriteria);
+            var panel = provider.Collection<JudgesPanel>().FindOne(judgeCriteria);
             
             if (null == panel)
-                return new JudgePanelModel();
+                return new JudgesPanelModel();
 
-            var model = new JudgePanelModel(panel);
+            var model = new JudgesPanelModel(panel);
             return model;
         }
     }

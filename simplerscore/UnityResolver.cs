@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Http.Dependencies;
+    using JetBrains.Annotations;
     using Microsoft.Practices.Unity;
 
     public class UnityResolver : IDependencyResolver
@@ -19,6 +20,7 @@
             this.container = container;
         }
 
+        [CanBeNull]
         public object GetService (Type serviceType)
         {
             try
@@ -31,6 +33,7 @@
             }
         }
 
+        [NotNull]
         public IEnumerable<object> GetServices (Type serviceType)
         {
             try
@@ -43,6 +46,7 @@
             }
         }
 
+        [NotNull]
         public IDependencyScope BeginScope ()
         {
             var child = container.CreateChildContainer();

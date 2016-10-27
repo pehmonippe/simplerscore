@@ -49,7 +49,7 @@
             set;
         }
 
-        public JudgePanel Panel
+        public JudgesPanel Panel
         {
             get;
             set;

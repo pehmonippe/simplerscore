@@ -1,12 +1,12 @@
 ﻿namespace SimplerScore.Controllers
 {
-    using System;
-    using System.Web.Http;
+    using DataAccess;
     using JetBrains.Annotations;
+    using System.Web.Http;
 
     public class CurrentController : BaseController
     {
-        public CurrentController ([NotNull] IServiceProvider provider) 
+        public CurrentController ([NotNull] IDataProvider provider) 
             : base(provider)
         {
         }

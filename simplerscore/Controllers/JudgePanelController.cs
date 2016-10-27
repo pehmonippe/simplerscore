@@ -1,11 +1,11 @@
 ﻿namespace SimplerScore.Controllers
 {
-    using System;
+    using DataAccess;
     using JetBrains.Annotations;
 
     public class JudgePanelController : BaseController
     {
-        public JudgePanelController ([NotNull] IServiceProvider provider) 
+        public JudgePanelController ([NotNull] IDataProvider provider) 
             : base(provider)
         {
         }
