@@ -120,9 +120,10 @@
     <Compile Include="Controllers\AthleteController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CurrentController.cs" />
-    <Compile Include="DataObjects\ProposedScoring.cs" />
     <Compile Include="DataObjects\Skill.cs" />
     <Compile Include="DataObjects\Execution.cs" />
+    <Compile Include="DataObjects\SkillEnumerator.cs" />
+    <Compile Include="Exceptions\SkillOutOfCompletedRangeException.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Models\CurrentProvider.cs" />
     <Compile Include="Models\Factories\AthleteModelFactory.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Models\Factories\JudgesPanelModelFactory.cs" />
     <Compile Include="Models\Factories\MeetModelFactory.cs" />
     <Compile Include="Models\Factories\ModelFactoryContainer.cs" />
+    <Compile Include="Models\ScoreModel.cs" />
     <Compile Include="Validators\CurrentProviderWithoutScoringModelValidatorBuilder.cs" />
     <Compile Include="Validators\CurrentProviderWithCurrentEventValidatorBuilder.cs" />
     <Compile Include="Validators\CurrentProviderWithCurrentMeetValidatorBuilder.cs" />
@@ -151,7 +153,7 @@
     <Compile Include="DataObjects\Routine.cs" />
     <Compile Include="DataObjects\Judge.cs" />
     <Compile Include="DataObjects\Athlete.cs" />
-    <Compile Include="DataObjects\JudgePanel.cs" />
+    <Compile Include="DataObjects\JudgesPanel.cs" />
     <Compile Include="DataObjects\Meet.cs" />
     <Compile Include="DataObjects\Person.cs" />
     <Compile Include="DataObjects\SchedulingBehavior.cs" />
@@ -170,7 +172,6 @@
     <Compile Include="Models\AthleteModel.cs" />
     <Compile Include="Models\Computation\ComputationStrategyFactory.cs" />
     <Compile Include="Models\Computation\ComputationStrategy.cs" />
-    <Compile Include="Models\CurrentModel.cs" />
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\Computation\IComputationStrategy.cs" />
     <Compile Include="Models\ICurrentProvider.cs" />

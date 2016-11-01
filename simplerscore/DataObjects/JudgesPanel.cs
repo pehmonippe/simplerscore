@@ -28,7 +28,7 @@
         {
             get;
             set;
-        }
+        } = new List<Judge>(5);
 
         public Judge DifficultyJudge
         {

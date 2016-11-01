@@ -15,9 +15,12 @@ namespace SimplerScore.Models
             Id = judgesPanel.Id;
 
             ChairOfJudgesPanel = judgesPanel.ChairOfJudgesPanel.Clone();
-            ExecutionJudges = judgesPanel.ExecutionJudges.ToList();
             DifficultyJudge = judgesPanel.DifficultyJudge.Clone();
             TimeJudge = judgesPanel.TimeJudge.Clone();
+
+            ExecutionJudges = judgesPanel.ExecutionJudges
+                .Select(ej => ej.Clone())
+                .ToList();
         }
     }
 }

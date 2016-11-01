@@ -10,6 +10,7 @@ namespace SimplerScore.Attributes
             public const string Difficulty = "Difficulty";
             public const string SignOff = "SignOff";
             public const string Preview = "Preview";
+            public const string Penalty = "Penalty";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace SimplerScore.Models.Computation
 {
     using System;
+    using JetBrains.Annotations;
 
     public interface IComputationStrategyFactory
     {
@@ -9,6 +10,13 @@
 
     public class ComputationStrategyFactory : IComputationStrategyFactory
     {
+        private readonly IComputer computer;
+
+        public ComputationStrategyFactory ([NotNull] IComputer computer)
+        {
+            this.computer = computer;
+        }
+
         public IComputationStrategy Create (ComputationStrategy strategy)
         {
             IComputationStrategy instance;
@@ -16,11 +24,11 @@
             switch (strategy)
             {
                 case ComputationStrategy.TotalDeduction:
-                    instance = new TotalDeductionComputationStrategy();
+                    instance = new TotalDeductionComputationStrategy(computer);
                     break;
 
                 case ComputationStrategy.MedianDeduction:
-                    instance = new MedianDeductionComputationStrategy();
+                    instance = new MedianDeductionComputationStrategy(computer);
                     break;
 
                 default:

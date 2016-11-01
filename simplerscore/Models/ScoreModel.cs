@@ -7,30 +7,18 @@ namespace SimplerScore.Models
     using DataObjects;
     using JetBrains.Annotations;
 
-    public class ScoreModel
+    public class ScoreModel : Routine, IModel
     {
         private readonly IComputationStrategy strategy;
         private readonly ConcurrentDictionary<int, Execution> deductions;
 
-        public int Time
+        public int CompletedElements
         {
             get;
-            set;
         }
 
-        public int Difficulty
-        {
-            get;
-            set;
-        }
-
-        public int Penalty
-        {
-            get;
-            set;
-        }
-
-        public List<Execution> Executions
+        //TODO: get rid of the NEW override
+        public new List<Execution> Executions
         {
             get { return deductions.Values.ToList(); }
         }
@@ -38,6 +26,7 @@ namespace SimplerScore.Models
         public ScoreModel ([NotNull] IComputationStrategy strategy, int judgeCount, int skillCount)
         {
             this.strategy = strategy;
+            CompletedElements = skillCount;
 
             deductions = new ConcurrentDictionary<int, Execution>();
             for (var j = 0; j < judgeCount; j++)
@@ -71,13 +60,24 @@ namespace SimplerScore.Models
             return true;
         }
 
+        public bool SetAdditionalDeduction (int judge, int additional)
+        {
+            Execution execution;
+
+            if (!deductions.TryGetValue(judge, out execution))
+                return false;
+
+            execution.Additional = additional;
+            return true;
+        }
+
         public Routine ComputeRoutineScore ()
         {
             var routine = new Routine
             {
                 Difficulty = Difficulty,
-                FlightTime = Time,
-                Execution = Executions,
+                Time = Time,
+                Executions = Executions,
                 Score = ComputeScore()
             };
 
@@ -90,4 +90,39 @@ namespace SimplerScore.Models
             return score;
         }
     }
+
+	internal class Skill
+    {
+        public List<int> Deductions
+        {
+            get;
+            set;
+        }
+
+        public Skill (List<int> deductions)
+        {
+            Deductions = deductions;
+        }
+    }
+
+    internal class ExecutionTransposed
+    {
+        public List<Skill> Skills
+        {
+            get;
+            set;
+        }
+
+        public List<int> Landings
+        {
+            get;
+            set;
+        }
+
+        public List<int> Additionals
+        {
+            get;
+            set;
+        }
+    }  
 }

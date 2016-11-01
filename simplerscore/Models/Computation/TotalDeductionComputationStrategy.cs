@@ -2,11 +2,17 @@ namespace SimplerScore.Models.Computation
 {
     using System.Collections.Generic;
     using System.Linq;
+    using DataObjects;
     using JetBrains.Annotations;
 
     internal class TotalDeductionComputationStrategy : AbstractComputationStrategy
     {
-        protected override decimal OnComputeScore ([ItemNotNull] List<List<int>> executions)
+        public TotalDeductionComputationStrategy ([CanBeNull] IComputer computer) 
+            : base(computer)
+        {
+        }
+
+        protected override decimal OnComputeScore ([ItemNotNull] IEnumerable<Execution> executions)
         {
             // compute per judge deductions
             var perJudge = JudgeDeductions(executions);
@@ -15,7 +21,7 @@ namespace SimplerScore.Models.Computation
             return score;
         }
 
-        protected virtual List<int> JudgeDeductions ([NotNull] [ItemNotNull] List<List<int>> executions)
+        protected virtual List<int> JudgeDeductions ([NotNull] [ItemNotNull] IEnumerable<Execution> executions)
         {
             // compute per judge score
             var scores = executions
@@ -25,12 +31,12 @@ namespace SimplerScore.Models.Computation
             return scores;
         }
 
-        protected virtual int ComputeJudgeScore ([NotNull] [ItemNotNull] List<int> execution)
+        protected virtual int ComputeJudgeScore ([NotNull] [ItemNotNull] Execution execution)
         {
-            var score = execution
+            var score = execution.Elements
                 .Sum(skill => skill);
 
-            var judgeScore = 10 * execution.Count - score;
+            var judgeScore = 10 * execution.Elements.Count - score;
             return judgeScore;
         }
 

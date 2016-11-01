@@ -1,6 +1,7 @@
 namespace SimplerScore.DataObjects
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Execution represents all the possible deductions
@@ -43,6 +44,15 @@ namespace SimplerScore.DataObjects
             set;
         }
 
+        public int Total
+        {
+            get
+            {
+                var total = Elements.Count * 10 - (Elements.Sum() + Landing + Additional);
+                return total >= 0 ? total : 0;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Execution" /> class.
         /// </summary>
@@ -50,6 +60,14 @@ namespace SimplerScore.DataObjects
         public Execution (int numberOfSkills)
         {
             Elements = new List<int>(numberOfSkills);
+        }
+
+        public Execution Clone ()
+        {
+            var clone = (Execution) MemberwiseClone();
+            Elements.ForEach(e => clone.Elements.Add(e));
+
+            return clone;
         }
     }
 }

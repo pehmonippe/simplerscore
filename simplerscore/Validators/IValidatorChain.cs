@@ -1,8 +1,10 @@
 namespace SimplerScore.Validators
 {
+    using JetBrains.Annotations;
+
     public interface IValidatorChain<T>
     {
-        void Validate (T obj);
+        void Validate ([NotNull] T obj, [CanBeNull] object userData = null);
 
         IValidatorChain<T> Next
         {

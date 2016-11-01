@@ -2,34 +2,51 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using DataObjects;
     using JetBrains.Annotations;
 
-    internal static class MedianComputationExtensions
+    public interface IComputer
+    {
+        decimal Median (IEnumerable<int> items);
+    }
+
+    internal static class ComputerExtensions
+    {
+        public static decimal Median ([NotNull] this IEnumerable<int> items, [NotNull] IComputer computer)
+        {
+            var median = computer.Median(items);
+            return median;
+        }
+    }
+
+    internal class MedianComputer : IComputer
     {
         /// <summary>
-        /// Computes median of the values.
+        /// Computes aritmetic median of the values.
         /// </summary>
-        /// <param name="execution">The execution.</param>
+        /// <param name="items">The items.</param>
         /// <returns></returns>
-        public static decimal Median (this List<int> execution)
+        public decimal Median (IEnumerable<int> items)
         {
-            var useAverage = 0 == execution.Count % 2;
+            var list = items.OrderBy(i => i).ToList();
+
+            var useAverage = 0 == list.Count % 2;
             decimal median;
 
             if (useAverage)
             {
-                var lowerMiddle = execution.Count / 2;
+                var lowerMiddle = list.Count / 2;
 
                 median = (decimal) new List<int>
                 {
-                    execution[lowerMiddle],
-                    execution[lowerMiddle + 1]
+                    list[lowerMiddle],
+                    list[lowerMiddle + 1]
                 }.Average();
             }
             else
             {
-                var middle = execution.Count / 2 + 1;
-                median = execution[middle];
+                var middle = list.Count / 2 + 1;
+                median = list[middle];
             }
 
             return median;
@@ -38,30 +55,29 @@
 
     internal class MedianDeductionComputationStrategy : AbstractComputationStrategy
     {
-        protected override decimal OnComputeScore (List<List<int>> executions)
+        public MedianDeductionComputationStrategy ([NotNull] IComputer computer) 
+            : base(computer)
+        {
+        }
+
+        protected override decimal OnComputeScore ([ItemNotNull] IEnumerable<Execution> executions)
         {
             var score = 3.0m * Medians(executions).Sum();
             return score;
         }
 
         /// <summary>
-        /// Computes the median values for each exercise.
+        /// Computes the sum of median values of elements.
         /// </summary>
         /// <param name="executions">The executions.</param>
         /// <returns></returns>
-        protected virtual decimal[] Medians ([NotNull, ItemNotNull] List<List<int>> executions)
+        protected virtual IList<decimal> Medians ([NotNull, ItemNotNull] IEnumerable<Execution> executions)
         {
-            var skills = executions.First().Count;
-            var medians = new decimal[skills];
+            var skills = new SkillEnumerator(executions);
 
-            for (var skill = 0; skill < skills; skill++)
-            {
-                // compute median of each exercise 
-                medians[skill] = executions
-                    .Select(execution => execution[skill])
-                    .ToList()
-                    .Median();
-            }
+            var medians = skills
+                .Select(execution => execution.Median(Computer))
+                .ToList();
 
             return medians;
         }

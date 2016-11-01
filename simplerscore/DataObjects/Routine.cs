@@ -4,7 +4,13 @@
 
     public class Routine
     {
-        public List<Execution> Execution
+        public List<Execution> Executions
+        {
+            get;
+            set;
+        }
+
+        public Execution Median
         {
             get;
             set;
@@ -16,7 +22,13 @@
             set;
         }
 
-        public int FlightTime
+        public int Time
+        {
+            get;
+            set;
+        }
+
+        public int Penalty
         {
             get;
             set;
@@ -34,4 +46,5 @@
             set;
         }
     }
+
 }

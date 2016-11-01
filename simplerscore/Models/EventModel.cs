@@ -69,8 +69,8 @@ namespace SimplerScore.Models
 
         public int GetJudgeCount ()
         {
-            //TODO: Get actual number from judgepanel....
-            return 5;
+            var nJudges = Panel?.ExecutionJudges?.Count;
+            return nJudges ?? 5;
         }
 
         private List<AthleteModel> InitModelCollection ()
