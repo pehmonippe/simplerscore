@@ -3,9 +3,9 @@
     using DataAccess;
     using JetBrains.Annotations;
 
-    public class JudgePanelController : BaseController
+    public class JudgesPanelController : BaseController
     {
-        public JudgePanelController ([NotNull] IDataProvider provider) 
+        public JudgesPanelController ([NotNull] IDataProvider provider) 
             : base(provider)
         {
         }
