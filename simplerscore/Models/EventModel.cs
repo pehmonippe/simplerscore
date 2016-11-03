@@ -37,6 +37,15 @@ namespace SimplerScore.Models
             }
         }
 
+        public AthleteModel this[int athleteId]
+        {
+            get
+            {
+                var athlete = Athletes.FirstOrDefault(a => a.Id == athleteId);
+                return athlete;
+            }
+        }
+
         public EventModel ([NotNull] IDataProvider provider, [NotNull] IComputationStrategyFactory strategyFactory, [NotNull] IModelFactoryContainer modelFactoryContainer)
         {
             this.provider = provider;

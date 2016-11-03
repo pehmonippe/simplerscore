@@ -2,16 +2,12 @@
 {
     using DataAccess;
     using DataObjects;
+    using Factories;
     using JetBrains.Annotations;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using Factories;
-
-    public interface IModel
-    {
-    }
 
     public class MeetModel : Meet, IModel
     {
@@ -26,6 +22,15 @@
             {
                 var e = events ?? (events = new Lazy<IEnumerable<EventModel>>(InitModelCollection));
                 return e.Value;
+            }
+        }
+
+        public EventModel this[int eventId]
+        {
+            get
+            {
+                var evnt = Events.FirstOrDefault(e => e.Id == eventId);
+                return evnt;
             }
         }
 
@@ -62,5 +67,4 @@
             return collection;
         }
     }
-
 }

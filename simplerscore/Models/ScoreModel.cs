@@ -1,7 +1,6 @@
 namespace SimplerScore.Models
 {
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Linq;
     using Computation;
     using DataObjects;
@@ -15,12 +14,6 @@ namespace SimplerScore.Models
         public int CompletedElements
         {
             get;
-        }
-
-        //TODO: get rid of the NEW override
-        public new List<Execution> Executions
-        {
-            get { return deductions.Values.ToList(); }
         }
 
         public ScoreModel ([NotNull] IComputationStrategy strategy, int judgeCount, int skillCount)
@@ -77,7 +70,7 @@ namespace SimplerScore.Models
             {
                 Difficulty = Difficulty,
                 Time = Time,
-                Executions = Executions,
+                Executions = deductions.Values.ToList(),
                 Score = ComputeScore()
             };
 
@@ -86,43 +79,8 @@ namespace SimplerScore.Models
 
         private decimal ComputeScore ()
         {
-            var score = strategy.ComputeScore(Executions, Time, Difficulty, Penalty);
+            var score = strategy.ComputeScore(deductions.Values.ToList(), Time, Difficulty, Penalty);
             return score;
         }
     }
-
-	internal class Skill
-    {
-        public List<int> Deductions
-        {
-            get;
-            set;
-        }
-
-        public Skill (List<int> deductions)
-        {
-            Deductions = deductions;
-        }
-    }
-
-    internal class ExecutionTransposed
-    {
-        public List<Skill> Skills
-        {
-            get;
-            set;
-        }
-
-        public List<int> Landings
-        {
-            get;
-            set;
-        }
-
-        public List<int> Additionals
-        {
-            get;
-            set;
-        }
-    }  
 }

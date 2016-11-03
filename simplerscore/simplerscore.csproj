@@ -120,6 +120,16 @@
     <Compile Include="Controllers\AthleteController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CurrentController.cs" />
+    <Compile Include="Controllers\EntityNotFoundException.cs" />
+    <Compile Include="Exceptions\NoCurrentException.cs" />
+    <Compile Include="Models\Iterators\IIteratable.cs" />
+    <Compile Include="Models\Iterators\IIterator.cs" />
+    <Compile Include="Models\Iterators\EventModelIterator.cs" />
+    <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\Iterators\MeetModelIterator.cs" />
+    <Compile Include="Extensions\ModelIteratorExtensions.cs" />
+    <Compile Include="Utilities\Disposable.cs" />
+    <Compile Include="Validators\ValidatorBuilderHelper.cs" />
     <Compile Include="DataObjects\Skill.cs" />
     <Compile Include="DataObjects\Execution.cs" />
     <Compile Include="DataObjects\SkillEnumerator.cs" />
@@ -141,7 +151,7 @@
     <Compile Include="Validators\CurrentProviderValidator.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Validators\IValidatorChain.cs" />
-    <Compile Include="Controllers\JudgePanelController.cs" />
+    <Compile Include="Controllers\JudgesPanelController.cs" />
     <Compile Include="Controllers\MeetController.cs" />
     <Compile Include="Controllers\ScoringController.cs" />
     <Compile Include="CustomDirectRouteProvider.cs" />

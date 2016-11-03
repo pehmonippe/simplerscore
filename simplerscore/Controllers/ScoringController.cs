@@ -1,6 +1,5 @@
 ﻿namespace SimplerScore.Controllers
 {
-    using System.Linq;
     using Attributes;
     using DataAccess;
     using DataObjects;
@@ -37,7 +36,7 @@
         [Route("skills={skills:int:range(0,10)}")]
         public IHttpActionResult SetNumberOfElementsCompleted ([FromUri] int skills = 10)
         {
-            ValidateWith<CurrentProviderWithoutScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithoutScoringModelValidatorBuilder>(currentProvider);
 
             var strategy = currentProvider.CurrentEvent.GetComputationStrategy();
             var judges = currentProvider.CurrentEvent.GetJudgeCount();
@@ -58,7 +57,7 @@
         [Route("{judge:int:range(1,5)}/{skill:int:range(1,10)}/{deduction:int:range(0,5)}")]
         public IHttpActionResult SetScore ([FromUri] int judge, [FromUri] int skill, [FromUri] int deduction)
         {
-            ValidateWith<CurrentProviderWithSkillValidatorBuilder>(currentProvider, skill);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithSkillValidatorBuilder>(currentProvider, skill);
 
             currentProvider.CurrentScore.SetSkillDeduction(judge, skill, deduction);
             return Ok();
@@ -75,7 +74,7 @@
         [Route("{judge:int:range(1,5)}/landing={landing:int:range(0,5)}")]
         public IHttpActionResult SetLanding ([FromUri] int judge, [FromUri] int landing)
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             currentProvider.CurrentScore.SetLandingDeduction(judge, landing);
             return Ok();
@@ -92,7 +91,7 @@
         [Route("penalty/{judge:int:range(0,4)}/{penalty:int:range(0,10)}")]
         public IHttpActionResult SetAdditionalDeduction ([FromUri] int judge, [FromUri] int penalty)
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             currentProvider.CurrentScore.SetAdditionalDeduction(judge, penalty);
             return Ok();
@@ -108,7 +107,7 @@
         [Route("penalty/{penalty:int:range(0,10)}")]
         public IHttpActionResult SetAdditionalDeduction ([FromUri] int penalty)
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             currentProvider.CurrentScore.Penalty = penalty;
             return Ok();
@@ -124,7 +123,7 @@
         [Route("diff={difficulty:int:range(0,200)}")]
         public IHttpActionResult SetDifficulty (int difficulty)
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             currentProvider.CurrentScore.Difficulty = difficulty;
             return Ok();
@@ -140,7 +139,7 @@
         [Route("time={time:int:range(0,30000)}")]
         public IHttpActionResult SetFlightTime ([FromUri] int time)
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             currentProvider.CurrentScore.Time = time;
             return Ok();
@@ -155,7 +154,7 @@
         [Route("preview")]
         public Task<Routine> GetScoreDetails ()
         {
-            ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
+            ValidatorBuilderHelper.ValidateWith<CurrentProviderWithScoringModelValidatorBuilder>(currentProvider);
 
             var proposed = currentProvider.CurrentScore.ComputeRoutineScore();
             return Task.FromResult(proposed);
@@ -180,20 +179,6 @@
             currentProvider.CurrentScore = null;
             return Ok();
         }
-
-        /// <summary>
-        /// Helper method for validating current provider with specified validator.
-        /// </summary>
-        /// <typeparam name="TValidatorBuilder">The type of the validator builder.</typeparam>
-        /// <param name="curr">The curr.</param>
-        /// <param name="obj">The object.</param>
-        private static void ValidateWith<TValidatorBuilder> (ICurrentProvider curr, object obj = null)
-            where TValidatorBuilder : IValidatorBuilder<ICurrentProvider>, new()
-        {
-            var builder = new TValidatorBuilder();
-            var validator = builder.Build();
-
-            validator.Validate(curr, obj);
-        }
     }
+
 }

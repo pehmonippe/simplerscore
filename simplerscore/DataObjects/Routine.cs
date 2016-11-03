@@ -10,12 +10,6 @@
             set;
         }
 
-        public Execution Median
-        {
-            get;
-            set;
-        }
-
         public int Difficulty
         {
             get;
