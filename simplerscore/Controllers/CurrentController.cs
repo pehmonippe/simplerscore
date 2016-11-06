@@ -1,5 +1,6 @@
 ﻿namespace SimplerScore.Controllers
 {
+    using System;
     using System.Linq;
     using DataAccess;
     using JetBrains.Annotations;
@@ -9,15 +10,16 @@
     using Exceptions;
     using Models;
     using Models.Factories;
+    using Models.Iterators;
     using Validators;
 
-    [RoutePrefix("current")]
+    [RoutePrefix ("current")]
     public class CurrentController : BaseController
     {
         private readonly ICurrentProvider currentProvider;
         private readonly IModelFactoryContainer modelFactoryContainer;
 
-        public CurrentController ([NotNull] ICurrentProvider currentProvider, [NotNull] IDataProvider provider, [NotNull] IModelFactoryContainer modelFactoryContainer) 
+        public CurrentController ([NotNull] ICurrentProvider currentProvider, [NotNull] IDataProvider provider, [NotNull] IModelFactoryContainer modelFactoryContainer)
             : base(provider)
         {
             this.currentProvider = currentProvider;
@@ -43,65 +45,73 @@
             return Ok();
         }
 
-        [AuthorizeAction(Action = AuthorizedAction.Scoring.Navigate)]
+        [AuthorizeAction (Action = AuthorizedAction.Scoring.Navigate)]
         [HttpGet]
-        [Route("next")]
+        [Route ("next")]
         public IHttpActionResult MoveToNext ()
         {
             ValidatorBuilderHelper.ValidateWith<CurrentProviderWithEventModelValidator>(currentProvider);
 
-            //TODO: meetmodel enumerator to encapsule forward and backward enumeration.
+            AthleteModel athleteModel;
 
-            AthleteModel next;
-
-            if (null == currentProvider.CurrentAthlete)
+            do
             {
-                next = currentProvider.CurrentEvent.Athletes
-                    .OrderBy(a => a.RunningOrder)
-                    .FirstOrDefault();
-            }
-            else
-            {
-                next = currentProvider.CurrentEvent.Athletes
-                    .Where(a => a.RunningOrder > currentProvider.CurrentAthlete.RunningOrder)
-                    .OrderBy(a => a.RunningOrder)
-                    .FirstOrDefault();
-            }
+                athleteModel = GetNext<AthleteModel>();
 
-            currentProvider.CurrentAthlete = next;
+                // ReSharper disable once InvertIf
+                if (null == athleteModel)
+                {
+                    var nextEvent = GetNext<EventModel>();
+                    currentProvider.CurrentEvent = nextEvent;
+
+                    if (null == currentProvider.CurrentEvent)
+                        throw new NoCurrentException();
+                }
+            } while (null == athleteModel);
+
+            currentProvider.CurrentAthlete = athleteModel;
+
+            if (null == currentProvider)
+                throw new NoCurrentException();
+
             return Ok();
         }
 
-        [AuthorizeAction(Action = AuthorizedAction.Scoring.Navigate)]
+        [AuthorizeAction (Action = AuthorizedAction.Scoring.Navigate)]
         [HttpGet]
-        [Route("previous")]
+        [Route ("previous")]
         public IHttpActionResult MoveToPrevious ()
         {
             ValidatorBuilderHelper.ValidateWith<CurrentProviderWithEventModelValidator>(currentProvider);
 
-            AthleteModel previous;
+            AthleteModel athleteModel;
 
-            if (null == currentProvider.CurrentAthlete)
+            do
             {
-                previous = currentProvider.CurrentEvent.Athletes
-                    .OrderBy(a => a.RunningOrder)
-                    .LastOrDefault();
-            }
-            else
-            {
-                previous = currentProvider.CurrentEvent.Athletes
-                    .Where(a => a.RunningOrder > currentProvider.CurrentAthlete.RunningOrder)
-                    .OrderByDescending(a => a.RunningOrder)
-                    .FirstOrDefault();
-            }
+                athleteModel = GetPrevious<AthleteModel>();
 
-            currentProvider.CurrentAthlete = previous;
+                // ReSharper disable once InvertIf
+                if (null == athleteModel)
+                {
+                    var previousEvent = GetPrevious<EventModel>();
+                    currentProvider.CurrentEvent = previousEvent;
+
+                    if (null == currentProvider.CurrentEvent)
+                        throw new NoCurrentException();
+                }
+            } while (null == athleteModel);
+
+            currentProvider.CurrentAthlete = athleteModel;
+
+            if (null == currentProvider)
+                throw new NoCurrentException();
+
             return Ok();
         }
 
-        [AuthorizeAction(Action = AuthorizedAction.Scoring.Navigate)]
+        [AuthorizeAction (Action = AuthorizedAction.Scoring.Navigate)]
         [HttpGet]
-        [Route("current/{eventId:int}/{athleteId:int}")]
+        [Route ("current/{eventId:int}/{athleteId:int}")]
         public IHttpActionResult MoveTo ([FromUri] int eventId, [FromUri] int athleteId)
         {
             ValidatorBuilderHelper.ValidateWith<CurrentProviderWithEventModelValidator>(currentProvider);
@@ -127,6 +137,42 @@
 
             return Ok();
         }
-    }
 
+        private IIterator<TModel> GetIterator<TModel> ()
+        {
+            var source = currentProvider as IIteratable<TModel>;
+
+            if (null == source)
+                throw new InvalidOperationException();
+
+            var iterator = source.GetIterator();
+            return iterator;
+        }
+
+        private TModel GetNext<TModel> ()
+            where TModel : class
+        {
+            var next = Navigate<TModel>(iterator => iterator?.MoveNext() ?? false);
+            return next;
+        }
+
+        private TModel GetPrevious<TModel> ()
+            where TModel : class
+        {
+            var previous = Navigate<TModel>(iterator => iterator?.MovePrevious() ?? false);
+            return previous;
+        }
+
+        private TModel Navigate<TModel> (Func<IIterator<TModel>, bool> navigateFunc)
+            where TModel : class
+        {
+            var iterator = GetIterator<TModel>();
+
+            var next = navigateFunc(iterator) ?
+                iterator.Current :
+                null;
+
+            return next;
+        }
+    }
 }

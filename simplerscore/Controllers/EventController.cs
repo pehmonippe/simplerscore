@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    [RoutePrefix("event")]
     public class EventController : BaseController
     {
         public EventController ([NotNull] IDataProvider provider)

@@ -2,10 +2,18 @@ namespace SimplerScore.Models
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using Exceptions;
+    using Iterators;
     using JetBrains.Annotations;
 
-    public class CurrentProvider : ICurrentProvider
+    public class CurrentProvider : ICurrentProvider, IIteratable<EventModel>, IIteratable<AthleteModel>
     {
+        #region Fields
+
+        private IIterator<EventModel> eventEnumerator;
+        private IIterator<AthleteModel> athleteEnumerator;
+        #endregion
+
         #region Events
 
         #region PropertyChanged
@@ -81,10 +89,12 @@ namespace SimplerScore.Models
             {
                 case nameof(CurrentMeet):
                     CurrentEvent = null;
+                    eventEnumerator = null;
                     break;
 
                 case nameof(CurrentEvent):
                     CurrentAthlete = null;
+                    athleteEnumerator = null;
                     break;
 
                 case nameof(CurrentAthlete):
@@ -103,6 +113,22 @@ namespace SimplerScore.Models
 
             property = value;
             RaisePropertyChanged(propertyName);
+        }
+
+        IIterator<EventModel> IIteratable<EventModel>.GetIterator ()
+        {
+            if (null == CurrentMeet)
+                throw new NoCurrentException();
+
+            return eventEnumerator = eventEnumerator ?? new MeetModelIterator(CurrentMeet);
+        }
+
+        IIterator<AthleteModel> IIteratable<AthleteModel>.GetIterator ()
+        {
+            if (null == CurrentEvent)
+                throw new NoCurrentException();
+
+            return athleteEnumerator = athleteEnumerator ?? new EventModelIterator(CurrentEvent);
         }
     }
 }

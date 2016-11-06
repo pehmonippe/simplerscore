@@ -60,6 +60,9 @@ namespace SimplerScore.DataObjects
         public Execution (int numberOfSkills)
         {
             Elements = new List<int>(numberOfSkills);
+
+            for (var i = 0; i < numberOfSkills; i++)
+                Elements.Add(0);
         }
 
         public Execution Clone ()

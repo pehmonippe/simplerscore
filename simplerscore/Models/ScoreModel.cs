@@ -1,5 +1,6 @@
 namespace SimplerScore.Models
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Linq;
     using Computation;
@@ -10,6 +11,11 @@ namespace SimplerScore.Models
     {
         private readonly IComputationStrategy strategy;
         private readonly ConcurrentDictionary<int, Execution> deductions;
+
+        public int Id
+        {
+            get { throw new NotImplementedException(); }
+        }
 
         public int CompletedElements
         {

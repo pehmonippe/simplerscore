@@ -23,8 +23,12 @@ namespace SimplerScore.Models.Computation
         /// <returns></returns>
         public decimal ComputeScore ([ItemNotNull] IEnumerable<Execution> executions, int time, int difficulty, int penalty)
         {
-            var score = OnComputeScore(executions) + time + difficulty - penalty;
-            return score;
+            // execution score is x10
+            // penalty is x10
+            // difficulty is x10
+            // time is x1000 (including 1/1000 fractions)
+            var score = 100 * (OnComputeScore(executions) + difficulty - penalty) + time;
+            return score / 1000m;
         }
 
         /// <summary>
