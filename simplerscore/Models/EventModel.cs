@@ -56,15 +56,15 @@ namespace SimplerScore.Models
         public EventModel ([NotNull] IDataProvider provider, [NotNull] IComputationStrategyFactory strategyFactory, [NotNull] Event evnt, [NotNull] IModelFactoryContainer modelFactoryContainer)
             : this(provider, strategyFactory, modelFactoryContainer)
         {
-            Group = evnt.Group;
+            //Group = evnt.Group;
             Id = evnt.Id;
             MeetId = evnt.MeetId;
             Name = evnt.Name;
-            Order = evnt.Order;
+            //Order = evnt.Order;
             Panel = evnt.Panel;
             ScoringStrategy = evnt.ScoringStrategy;
-            ScheduleBehavior = evnt.ScheduleBehavior;
-            ScheduledTime = evnt.ScheduledTime;
+            //ScheduleBehavior = evnt.ScheduleBehavior;
+            //ScheduledTime = evnt.ScheduledTime;
             Sponsor = evnt.Sponsor;
 
             this.provider = provider;

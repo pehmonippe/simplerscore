@@ -1,12 +1,15 @@
 namespace SimplerScore.Models
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using Exceptions;
     using Iterators;
     using JetBrains.Annotations;
 
-    public class CurrentProvider : ICurrentProvider, IIteratable<EventModel>, IIteratable<AthleteModel>
+    public class CurrentProvider : ICurrentProvider, IIterable<EventModel>, IIterable<AthleteModel>
     {
         #region Fields
 
@@ -115,7 +118,8 @@ namespace SimplerScore.Models
             RaisePropertyChanged(propertyName);
         }
 
-        IIterator<EventModel> IIteratable<EventModel>.GetIterator ()
+        #region Iterator and enumerator implementations
+        private IIterator<EventModel> GetEventIterator ()
         {
             if (null == CurrentMeet)
                 throw new NoCurrentException();
@@ -123,12 +127,38 @@ namespace SimplerScore.Models
             return eventEnumerator = eventEnumerator ?? new MeetModelIterator(CurrentMeet);
         }
 
-        IIterator<AthleteModel> IIteratable<AthleteModel>.GetIterator ()
+        IIterator<EventModel> IIterable<EventModel>.GetIterator ()
+        {
+            return GetEventIterator();
+        }
+
+        private IIterator<AthleteModel> GetAthleteIterator ()
         {
             if (null == CurrentEvent)
                 throw new NoCurrentException();
 
             return athleteEnumerator = athleteEnumerator ?? new EventModelIterator(CurrentEvent);
         }
+
+        IIterator<AthleteModel> IIterable<AthleteModel>.GetIterator ()
+        {
+            return GetAthleteIterator();
+        }
+
+        IEnumerator<AthleteModel> IEnumerable<AthleteModel>.GetEnumerator ()
+        {
+            return GetAthleteIterator();
+        }
+
+        IEnumerator<EventModel> IEnumerable<EventModel>.GetEnumerator ()
+        {
+            return GetEventIterator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+        {
+            throw new NotSupportedException("Ambigous call.");
+        }
+        #endregion
     }
 }
