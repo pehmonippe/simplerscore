@@ -1,7 +1,6 @@
 ﻿namespace SimplerScore.DataObjects
 {
     using LiteDB;
-    using System;
     using Models.Computation;
 
     public class Event
@@ -20,30 +19,6 @@
         }
 
         public string Name
-        {
-            get;
-            set;
-        }
-
-        public int Group
-        {
-            get;
-            set;
-        }
-
-        public int Order
-        {
-            get;
-            set;
-        }
-
-        public DateTime ScheduledTime
-        {
-            get;
-            set;
-        }
-
-        public SchedulingBehavior ScheduleBehavior
         {
             get;
             set;
