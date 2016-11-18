@@ -1,14 +1,27 @@
 namespace SimplerScore.Models.Iterators
 {
-    using System.Collections;
-    using Extensions;
+    using System;
     using JetBrains.Annotations;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
     using Utilities;
 
-    public class MeetModelIterator : Disposable, IIterator<EventModel>
+    public class MeetModelIterator : Disposable, IIterator<EventModel>//, IIterable<EventModel2>
     {
         private readonly MeetModel rootModel;
         private EventModel eventModel;
+        private Lazy<List<int>> iterables;
+        private int iterationIndex = -1;
+
+        private List<int> Iterables
+        {
+            get
+            {
+                var i = iterables ?? (iterables = new Lazy<List<int>>(InitIterables));
+                return i.Value;
+            }
+        }
 
         public MeetModelIterator ([NotNull] MeetModel rootModel)
         {
@@ -17,20 +30,45 @@ namespace SimplerScore.Models.Iterators
 
         public bool MovePrevious ()
         {
-            eventModel = eventModel.GetPreviousItem(rootModel.Events.ToScheduledOrder());
+            if (iterationIndex > 0)
+            {
+                iterationIndex--;
+                eventModel = rootModel[Iterables[iterationIndex]];
+            }
+            else
+            {
+                eventModel = null;
+            }
+
             return null != eventModel;
         }
 
         public bool MoveNext ()
         {
-            eventModel = eventModel.GetFollowingItem(rootModel.Events.ToScheduledOrder());
+            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+            if (++iterationIndex < Iterables.Count)
+            {
+                eventModel = rootModel[Iterables[iterationIndex]];
+            }
+            else
+            {
+                eventModel = null;
+            }
+
             return null != eventModel;
         }
 
         public void Reset ()
         {
             ThrowIfDisposed();
+
+            iterationIndex = -1;
             eventModel = null;
+        }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
         }
 
         public EventModel Current
@@ -42,9 +80,29 @@ namespace SimplerScore.Models.Iterators
             }
         }
 
-        object IEnumerator.Current
+        //public IIterator<EventModel> GetIterator ()
+        //{
+        //    return this;
+        //}
+
+        //IEnumerator<EventModel> IEnumerable<EventModel>.GetEnumerator ()
+        //{
+        //    return GetIterator();
+        //}
+
+        public IEnumerator GetEnumerator ()
         {
-            get { return Current; }
+            return this;
+        }
+
+        private List<int> InitIterables ()
+        {
+            var ids = rootModel.TimePoints
+                .OrderBy(tp => tp.Time)
+                .SelectMany(tp => tp.EventIds)
+                .ToList();
+
+            return ids;
         }
     }
 }

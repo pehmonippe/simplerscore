@@ -1,9 +1,10 @@
-﻿namespace SimplerScore.DataObjects
+namespace SimplerScore.DataObjects
 {
+    using System;
+    using System.Collections.Generic;
     using LiteDB;
-    using Models.Computation;
 
-    public class Event
+    public class TimePoint
     {
         [BsonId(true)]
         public int Id
@@ -18,25 +19,25 @@
             set;
         }
 
-        public string Name
+        public TimeSpan Time
         {
             get;
             set;
         }
 
-        public JudgesPanel Panel
+        public SchedulingBehavior Behavior
         {
             get;
             set;
         }
 
-        public ComputationStrategy ScoringStrategy
+        public List<int> EventIds
         {
             get;
             set;
-        }
+        } = new List<int>();
 
-        public string Sponsor
+        public bool Interlaced
         {
             get;
             set;

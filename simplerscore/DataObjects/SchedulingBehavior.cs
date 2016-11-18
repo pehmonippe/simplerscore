@@ -2,6 +2,7 @@
 {
     public enum SchedulingBehavior
     {
+        Unspecified,
         Exact,
         EarliestPossible
     }

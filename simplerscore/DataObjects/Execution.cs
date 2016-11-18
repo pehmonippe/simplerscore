@@ -2,6 +2,7 @@ namespace SimplerScore.DataObjects
 {
     using System.Collections.Generic;
     using System.Linq;
+    using LiteDB;
 
     /// <summary>
     /// Execution represents all the possible deductions
@@ -18,6 +19,7 @@ namespace SimplerScore.DataObjects
         public List<int> Elements
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace SimplerScore.DataObjects
             set;
         }
 
+        [BsonIgnore]
         public int Total
         {
             get
@@ -51,6 +54,10 @@ namespace SimplerScore.DataObjects
                 var total = Elements.Count * 10 - (Elements.Sum() + Landing + Additional);
                 return total >= 0 ? total : 0;
             }
+        }
+
+        public Execution ()
+        {
         }
 
         /// <summary>

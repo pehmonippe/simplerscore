@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using DataObjects;
     using JetBrains.Annotations;
     using Models;
 
@@ -16,17 +17,49 @@
             return sortedAthletes;
         }
 
-        public static IEnumerable<EventModel> ToScheduledOrder ([NotNull, ItemNotNull] this IEnumerable<EventModel> events)
+        public static List<ScheduleEntry> ToScheduledOrder ([NotNull] this MeetModel meetModel)
         {
-            var sortedEvents = events
-                .OrderBy(e => e.ScheduledTime)
-                .ThenBy(e => e.Group)
-                .ThenBy(e => e.Order)
+            var ids = meetModel.Events
+                .Select(tp => tp.Id)
                 .ToList();
 
-            return sortedEvents;
-        }
+            var scheduledIds = meetModel.TimePoints
+                .OrderBy(tp => tp.Time)
+                .SelectMany(tp => tp.EventIds)
+                .ToList();
 
+            var unscheduledIds = ids
+                .Except(scheduledIds)
+                .ToList();
+
+            var unscheduledEventsEntry = new ScheduleEntry
+            {
+                Time = meetModel.DateOfEvent.TimeOfDay,
+                Behavior = SchedulingBehavior.Unspecified,
+                Events = meetModel.Events
+                    .Where(e => unscheduledIds.Contains(e.Id))
+                    .Select(e => e.Name)
+                    .ToList()
+            };
+
+            var schedule = new List<ScheduleEntry> { unscheduledEventsEntry };
+
+            var scheduledEvents = meetModel.TimePoints
+                .OrderBy(tp => tp.Time)
+                .Select(tp => new ScheduleEntry
+                    {
+                        Time = tp.Time,
+                        Behavior = tp.Behavior,
+                        Events = tp.EventIds
+                            .Select(id => meetModel[id].Name)
+                            .ToList()
+                    })
+                .ToList();
+
+            schedule.AddRange(scheduledEvents);
+            return schedule;
+        }
+        
         public static TModel GetFollowingItem<TModel> ([CanBeNull] this TModel current, [NotNull, ItemNotNull] IEnumerable<TModel> sortedItems)
             where TModel : class, IModel
         {

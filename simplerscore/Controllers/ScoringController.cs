@@ -175,8 +175,6 @@
             // persist data (specify type, since we're not persisting the model)
             Update<Athlete>(currentProvider.CurrentAthlete.Id, currentProvider.CurrentAthlete).Wait();
 
-            //TODO: check result persistance.
-
             // prepare for next
             currentProvider.CurrentScore = null;
             return Ok();

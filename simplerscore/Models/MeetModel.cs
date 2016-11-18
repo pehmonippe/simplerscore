@@ -5,14 +5,18 @@
     using Factories;
     using JetBrains.Annotations;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
+    using Iterators;
 
-    public class MeetModel : Meet, IModel
+    public class MeetModel : Meet, IModel, IIterable<EventModel>
     {
         private readonly IDataProvider provider;
         private readonly IModelFactoryContainer modelFactoryContainer;
+        private readonly CollectionInitializer collectionInitializer;
+
+        #region Events
 
         private Lazy<IEnumerable<EventModel>> events;
 
@@ -24,6 +28,23 @@
                 return e.Value;
             }
         }
+
+        #endregion
+
+        #region TimePoints
+
+        private Lazy<IEnumerable<TimePointModel>> timePoints;
+
+        public IEnumerable<TimePointModel> TimePoints
+        {
+            get
+            {
+                var t = timePoints ?? (timePoints = new Lazy<IEnumerable<TimePointModel>>(InitTimePointCollection));
+                return t.Value;
+            }
+        }
+        #endregion
+
 
         public EventModel this[int eventId]
         {
@@ -38,6 +59,8 @@
         {
             this.provider = provider;
             this.modelFactoryContainer = modelFactoryContainer;
+
+            collectionInitializer = new CollectionInitializer(provider, modelFactoryContainer);
         }
 
         public MeetModel ([NotNull] Meet meet, [NotNull] IDataProvider provider, [NotNull] IModelFactoryContainer modelFactoryContainer)
@@ -52,19 +75,34 @@
 
         private List<EventModel> InitModelCollection ()
         {
-            if (null == provider)
-                return new List<EventModel>();
+            var collection = collectionInitializer.Initialize<Event, EventModel>(e => e.MeetId == Id);
+            return collection;
+        }
 
-            Expression<Func<Event, bool>> eventCriteria = e => e.MeetId == Id;
-
-            var factory = modelFactoryContainer.ModelFactoryOfType<Event>();
-
-            var collection = provider.Collection<Event>()
-                .Find(eventCriteria)
-                .ToList()
-                .ConvertAll(e => (EventModel)factory.Create(e, provider, modelFactoryContainer));
+        private List<TimePointModel> InitTimePointCollection ()
+        {
+            var collection = collectionInitializer.Initialize<TimePoint, TimePointModel>(t => t.MeetId == Id)
+                .OrderBy(p => p.Time)
+                .ToList();
 
             return collection;
         }
+
+        public IIterator<EventModel> GetIterator ()
+        {
+            var iterator = new MeetModelIterator(this);
+            return iterator;
+        }
+
+        public IEnumerator<EventModel> GetEnumerator ()
+        {
+            return Events.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator ()
+        {
+            return GetEnumerator();
+        }
     }
+
 }

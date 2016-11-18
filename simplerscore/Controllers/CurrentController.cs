@@ -1,6 +1,7 @@
 ﻿namespace SimplerScore.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using DataAccess;
     using JetBrains.Annotations;
@@ -37,9 +38,7 @@
                 throw new EntityNotFoundException();
 
             currentProvider.CurrentMeet = (MeetModel) modelFactoryContainer.Create(meet, Provider);
-            currentProvider.CurrentEvent = currentProvider.CurrentMeet?.Events
-                .OrderBy(e => e.Group)
-                .ThenBy(e => e.Order)
+            currentProvider.CurrentEvent = currentProvider.CurrentMeet
                 .FirstOrDefault();
 
             return Ok();
@@ -140,7 +139,7 @@
 
         private IIterator<TModel> GetIterator<TModel> ()
         {
-            var source = currentProvider as IIteratable<TModel>;
+            var source = currentProvider as IIterable<TModel>;
 
             if (null == source)
                 throw new InvalidOperationException();
