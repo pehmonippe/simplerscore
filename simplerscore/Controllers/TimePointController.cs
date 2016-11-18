@@ -2,6 +2,7 @@ namespace SimplerScore.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http;
+    using System.Web.Http.ModelBinding;
     using DataAccess;
     using DataObjects;
     using JetBrains.Annotations;
@@ -24,14 +25,14 @@ namespace SimplerScore.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<int> AddTimePoint ([FromBody] TimePoint point)
+        public async Task<int> AddTimePoint ([ModelBinder] TimePoint point)
         {
             return await Add(point);
         }
 
         [HttpPost]
         [Route("{id:int}")]
-        public async Task<int> UpdateTimePoint ([FromUri] int id, [FromBody] TimePoint point)
+        public async Task<int> UpdateTimePoint ([FromUri] int id, [ModelBinder] TimePoint point)
         {
             return await Update(id, point);
         }

@@ -13,13 +13,14 @@
     {
         private static string GetValue ([NotNull] this ModelBindingContext context, [NotNull] string key)
         {
-            var hasPrefix = context.ValueProvider.ContainsPrefix(context.ModelName);
+            //var hasPrefix = context.ValueProvider.ContainsPrefix(context.ModelName);
 
-            var searchPrefix = hasPrefix ?
-                context.Model + "." :
-                string.Empty;
+            //var searchPrefix = hasPrefix ?
+            //    context.Model + "." :
+            //    string.Empty;
 
-            var result = context.ValueProvider.GetValue(searchPrefix + key);
+            //var result = context.ValueProvider.GetValue(searchPrefix + key);
+            var result = context.ValueProvider.GetValue(key);
             return result?.AttemptedValue;
         }
 
