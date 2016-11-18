@@ -76,20 +76,5 @@
             var model = (MeetModel) modelFactoryContainer.Create(meet, Provider);
             return await Task.FromResult(model);
         }
-
-        [HttpGet]
-        [Route("{id:int}/schedule")]
-        public async Task<List<ScheduleEntry>> GetSchedule ([FromUri] int id)
-        {
-            var meet = Provider.Find<Meet>(id);
-
-            if (null == meet)
-                return null;
-
-            var model = (MeetModel)modelFactoryContainer.Create(meet, Provider);
-            var schedule = model.ToScheduledOrder();
-
-            return await Task.FromResult(schedule);
-        }
     }
 }
