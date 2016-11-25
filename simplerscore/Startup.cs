@@ -14,9 +14,9 @@
     using System.Web.Http.ExceptionHandling;
     using System.Web.Http.ModelBinding;
     using System.Web.Http.ModelBinding.Binders;
-    using Controllers.ModelBinders;
     using DataObjects;
     using Microsoft.Practices.Unity.Configuration;
+    using ModelBinders;
 
     public class Startup
     {

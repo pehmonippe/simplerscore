@@ -1,4 +1,4 @@
-﻿namespace SimplerScore.Controllers.ModelBinders
+﻿namespace SimplerScore.ModelBinders
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,6 @@
     using System.Web.Http.ModelBinding;
     using DataObjects;
     using JetBrains.Annotations;
-    using Models;
 
     internal static class TimePointModelBinderExtensions
     {
