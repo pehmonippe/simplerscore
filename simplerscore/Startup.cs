@@ -12,7 +12,11 @@
     using System;
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
+    using System.Web.Http.ModelBinding;
+    using System.Web.Http.ModelBinding.Binders;
+    using DataObjects;
     using Microsoft.Practices.Unity.Configuration;
+    using ModelBinders;
 
     public class Startup
     {
@@ -70,6 +74,9 @@
             var container = new UnityContainer();
             container.LoadConfiguration();
             config.DependencyResolver = new UnityResolver(container);
+
+            var provider = new SimpleModelBinderProvider(typeof (TimePoint), new TimePointModelBinder());
+            config.Services.Insert(typeof (ModelBinderProvider), 0, provider);
 
             app.UseWebApi(config);
             //config.EnsureInitialized();

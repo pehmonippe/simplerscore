@@ -1,4 +1,4 @@
-﻿namespace SimplerScore.Controllers.ModelBinders
+﻿namespace SimplerScore.ModelBinders
 {
     using System;
     using System.Collections.Generic;
@@ -7,19 +7,19 @@
     using System.Web.Http.ModelBinding;
     using DataObjects;
     using JetBrains.Annotations;
-    using Models;
 
     internal static class TimePointModelBinderExtensions
     {
         private static string GetValue ([NotNull] this ModelBindingContext context, [NotNull] string key)
         {
-            var hasPrefix = context.ValueProvider.ContainsPrefix(context.ModelName);
+            //var hasPrefix = context.ValueProvider.ContainsPrefix(context.ModelName);
 
-            var searchPrefix = hasPrefix ?
-                context.Model + "." :
-                string.Empty;
+            //var searchPrefix = hasPrefix ?
+            //    context.Model + "." :
+            //    string.Empty;
 
-            var result = context.ValueProvider.GetValue(searchPrefix + key);
+            //var result = context.ValueProvider.GetValue(searchPrefix + key);
+            var result = context.ValueProvider.GetValue(key);
             return result?.AttemptedValue;
         }
 

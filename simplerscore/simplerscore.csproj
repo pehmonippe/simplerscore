@@ -121,7 +121,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CurrentController.cs" />
     <Compile Include="Controllers\EntityNotFoundException.cs" />
-    <Compile Include="Controllers\ModelBinders\TimePointModelBinder.cs" />
+    <Compile Include="ModelBinders\TimePointModelBinder.cs" />
     <Compile Include="Controllers\ScoreboardController.cs" />
     <Compile Include="Controllers\TimePointController.cs" />
     <Compile Include="DataObjects\Schedule.cs" />
